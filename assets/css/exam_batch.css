@@ -1,0 +1,233 @@
+
+
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: #f5f5f5;
+}
+.section {
+    padding: 40px 20px;
+}
+.section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+.courses {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+.course-card {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    width: 250px;
+    padding: 20px;
+    text-align: center;
+}
+.course-card h3 {
+    margin: 0 0 10px;
+}
+.course-card p {
+    color: #555;
+}
+.enroll-btn {
+    background: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+.enroll-btn:hover {
+    background: #0056b3;
+}
+
+
+/* Exam Batches Section Styles */
+.exam-batches {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 4rem 2rem;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.section-header h2 {
+  font-size: 2.2rem;
+  color: #2c3e50;
+  margin-bottom: 0.5rem;
+  font-weight: 600;
+}
+
+.section-header p {
+  font-size: 1.1rem;
+  color: #7f8c8d;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+.batches-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 2rem;
+}
+
+.batch-card {
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.batch-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+}
+
+.batch-image {
+  height: 180px;
+  overflow: hidden;
+}
+
+.batch-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.batch-card:hover .batch-image img {
+  transform: scale(1.05);
+}
+
+.batch-content {
+  padding: 1.5rem;
+}
+
+.batch-content h3 {
+  font-size: 1.3rem;
+  color: #2c3e50;
+  margin-bottom: 0.75rem;
+  font-weight: 600;
+}
+
+.batch-content p {
+  color: #7f8c8d;
+  font-size: 0.95rem;
+  line-height: 1.5;
+  margin-bottom: 1.25rem;
+}
+
+.batch-meta {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.85rem;
+  color: #95a5a6;
+  margin-bottom: 1.5rem;
+}
+
+.enroll-btn {
+  display: inline-block;
+  padding: 0.6rem 1.5rem;
+  background-color: #3498db;
+  color: white;
+  text-decoration: none;
+  border-radius: 4px;
+  font-weight: 500;
+  transition: background-color 0.3s ease;
+}
+
+.enroll-btn:hover {
+  background-color: #2980b9;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .batches-grid {
+    grid-template-columns: 1fr;
+
+  }
+  
+  .section-header h2 {
+    font-size: 1.8rem;
+  }
+  
+  .section-header p {
+    font-size: 1rem;
+  }
+  
+  .batch-card {
+    margin: 0 auto;
+  }
+  
+  .batch-image {
+    height: 200px;
+  }
+  
+  .batch-content h3 {
+    font-size: 1.2rem;
+  }
+  
+  .batch-content p {
+    font-size: 0.9rem;
+  }
+  
+  .batch-meta {
+    font-size: 0.8rem;
+  }
+  
+  .enroll-btn {
+    padding: 0.5rem 1.2rem;
+    font-size: 0.9rem;
+  }
+  
+}
+
+/* Add this to your existing CSS */
+.batch-price {
+    margin: 1rem 0;
+    font-weight: 600;
+}
+
+.original-price {
+    color: #95a5a6;
+    text-decoration: line-through;
+    margin-right: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.discounted-price {
+    color: #2ecc71; /* Green for emphasis */
+    font-size: 1.2rem;
+}
+
+.discount-badge {
+    background: #e74c3c;
+    color: white;
+    font-size: 0.7rem;
+    padding: 0.2rem 0.5rem;
+    border-radius: 3px;
+    margin-left: 0.5rem;
+    position: relative;
+    top: -2px;
+}
+
+/* Optional: Add a "per month" subtle text */
+.batch-price::after {
+    content: "(one-time payment)";
+    display: block;
+    font-size: 0.7rem;
+    color: #95a5a6;
+    font-weight: normal;
+    margin-top: 0.2rem;
+}
