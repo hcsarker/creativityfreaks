@@ -1353,7 +1353,7 @@ hr {
 .sidebar {
   width: 220px;
   padding: 20px;
-  background-color: yellow;
+  background-color: #fff;
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
 }
@@ -1399,12 +1399,12 @@ hr {
   font-weight: 500;
   transition: 0.3s;
 }
-
+ 
 .sidebar .main-cat-btn:hover,
 .sidebar .main-cat-btn.active {
-  background-color: yellow;
+  background-color: #007BFF;
   color: #fff;
-  border-color: yellow;
+  
 }
 
 
@@ -1430,7 +1430,7 @@ hr {
 
 .subcategory-filter .subcat-btn:hover,
 .subcategory-filter .subcat-btn.active {
-  background-color: yellow;
+  background-color: #007BFF;
   color: white;
 }
 
