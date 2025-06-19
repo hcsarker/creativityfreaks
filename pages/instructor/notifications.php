@@ -31,11 +31,27 @@ $notifications = $result->fetch_all(MYSQLI_ASSOC);
       <?php endforeach; ?>
     </ul>
   <?php endif; ?>
+
+  <a href="index.php" class="btn btn-primary">Back</a>
 </div>
 
-<a href="index.php" class="btn btn-primary">Back</a>
+
 
 <style>
+.dashboard-content {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 20px auto;
+  font-family: Arial, sans-serif;
+}
+.dashboard-content h2 {
+  margin-bottom: 20px;
+  font-size: 1.5em;
+  color: #333;
+}
 
 .notification-list {
   list-style: none;

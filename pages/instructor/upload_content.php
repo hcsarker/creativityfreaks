@@ -2,6 +2,7 @@
 session_start();
 require_once '../../includes/db.php';
 
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
   $course_id = $_POST['course_id'];
   $title = $_POST['title'];
@@ -28,8 +29,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
   }
 
-  $stmt = $conn->prepare("INSERT INTO course_contents (course_id, title, type, file_path, video_url) VALUES (?, ?, ?, ?, ?)");
-  $stmt->bind_param("issss", $course_id, $title, $type, $file_path, $video_url);
+  $instructor_id = $_SESSION['user_id']; // Instructor's ID
+
+$stmt = $conn->prepare("INSERT INTO course_contents (course_id, instructor_id, title, type, file_path, video_url)
+                        VALUES (?, ?, ?, ?, ?, ?)");
+$stmt->bind_param("iissss", $course_id, $instructor_id, $title, $type, $file_path, $video_url);
+
   $stmt->execute();
 
   header("Location: view_course.php?id=" . $course_id);
