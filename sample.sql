@@ -307,3 +307,29 @@ WHERE email = 'instructor1@creativityfreaks.com';
 UPDATE users 
 SET role = 'student' 
 WHERE email = 'student2@gmail.com';
+
+
+CREATE TABLE course_contents (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  course_id INT NOT NULL,
+  instructor_id INT NOT NULL,
+  title VARCHAR(255) NOT NULL,
+  type ENUM('video','pdf','ppt','doc','sheet','link') NOT NULL,
+  file_path TEXT,
+  video_url TEXT,
+  created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (course_id) REFERENCES courses(id),
+  FOREIGN KEY (instructor_id) REFERENCES users(id)
+);
+
+CREATE TABLE student_progress (
+  id INT AUTO_INCREMENT PRIMARY KEY,
+  student_id INT NOT NULL,
+  course_id INT NOT NULL,
+  content_id INT NOT NULL,
+  is_completed TINYINT(1) DEFAULT 0,
+  viewed_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  FOREIGN KEY (student_id) REFERENCES users(id),
+  FOREIGN KEY (course_id) REFERENCES courses(id),
+  FOREIGN KEY (content_id) REFERENCES course_contents(id)
+);

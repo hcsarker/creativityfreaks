@@ -13,7 +13,7 @@
           <!-- <p>Status: <span class="status <?= $course['status'] ?>"><?= ucfirst($course['status']) ?></span></p> -->
           <p>Enrolled: <?= $course['enrolled_students'] ?></p>
           <div class="actions">
-            <a href="edit_course.php?id=<?= $course['id'] ?>" class="btn btn-warning">Edit</a>
+            <a href="upload_content.php?id=<?= $course['id'] ?>" class="btn btn-warning">Edit</a>
             <a href="view_course.php?id=<?= $course['id'] ?>" class="btn btn-info">View</a>
             <a href="students.php?course_id=<?= $course['id'] ?>" class="btn btn-success">Students</a>
           </div>
