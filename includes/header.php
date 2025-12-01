@@ -8,11 +8,6 @@
             </a>
         </div>
 
-        <!-- Hamburger (Mobile) -->
-        <div class="hamburger" onclick="toggleMobileMenu()">
-            <i class="fas fa-bars"></i>
-        </div>
-
         <!-- Navigation -->
         <nav class="nav-links" id="navLinks">
             <a href="/creativityfreaks/index.php" class="active">Home</a>
@@ -25,8 +20,12 @@
 
         <!-- Right Section -->
         <div class="header-right">
+            <!-- Hamburger (Mobile) -->
+            <div class="hamburger" onclick="toggleMobileMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
+            
             <?php if (!isset($_SESSION['user_id'])): ?>
-
             <button class="login-btn" onclick="toggleModal()">Login</button>
             <?php else: ?>
             <!-- Add to your header -->
