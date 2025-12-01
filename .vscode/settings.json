@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "/subscriptions/6fd27bfc-2ae3-4a91-b18b-a8afb17effe9/resourceGroups/creativityfreaks_group-aa80/providers/Microsoft.Web/sites/creativityfreaks",
+    "appService.deploySubpath": "."
+}
