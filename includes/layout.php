@@ -1,3 +1,4 @@
+<?php require_once __DIR__ . '/init.php'; ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,6 +28,7 @@
   <!-- Fonts & Style -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
   <link rel="stylesheet" href="/creativityfreaks/assets/css/style.css"> 
+  <?php echo csrf_meta_tag(); ?>
 </head>
 <body>
 
@@ -70,6 +72,7 @@
 
       <input type="email" name="email" placeholder="Email" required />
       <input type="password" name="password" placeholder="Password" required />
+      <input type="hidden" name="csrf_token" value="<?php echo csrf_token(); ?>" />
       <button type="submit">Login</button>
       <p class="link-text"><a href="#">Forgot Password?</a></p>
     </form>
@@ -85,6 +88,7 @@
       <input type="email" name="email" placeholder="Email" required />
       <input type="password" name="password" placeholder="Password" required />
       <input type="password" name="confirm_password" placeholder="Confirm Password" required />
+      <input type="hidden" name="csrf_token" value="<?php echo csrf_token(); ?>" />
       <button type="submit">Register</button>
     </form>
 

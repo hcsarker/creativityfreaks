@@ -1,6 +1,7 @@
 <?php
 session_start();
 require_once '../../includes/db.php';
+require_once '../../includes/init.php';
 
 if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'instructor') {
   die('Access denied.');
@@ -8,9 +9,21 @@ if (!isset($_SESSION['user_id']) || $_SESSION['user_role'] !== 'instructor') {
 
 $instructorId = $_SESSION['user_id'];
 
-$sql = "SELECT * FROM notifications WHERE user_id = ? AND type = 'course' ORDER BY created_at DESC";
+$perPage = 10;
+$page = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
+$offset = ($page - 1) * $perPage;
+
+// Count total
+$countStmt = $conn->prepare("SELECT COUNT(*) FROM notifications WHERE user_id = ? AND type = 'course'");
+$countStmt->bind_param("i", $instructorId);
+$countStmt->execute();
+$total = (int)$countStmt->get_result()->fetch_row()[0];
+$totalPages = max(1, (int)ceil($total / $perPage));
+
+// Fetch page
+$sql = "SELECT * FROM notifications WHERE user_id = ? AND type = 'course' ORDER BY created_at DESC LIMIT ? OFFSET ?";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $instructorId);
+$stmt->bind_param("iii", $instructorId, $perPage, $offset);
 $stmt->execute();
 $result = $stmt->get_result();
 $notifications = $result->fetch_all(MYSQLI_ASSOC);
@@ -33,6 +46,17 @@ $notifications = $result->fetch_all(MYSQLI_ASSOC);
   <?php endif; ?>
 
   <a href="index.php" class="btn btn-primary">Back</a>
+
+    <?php if ($totalPages > 1): ?>
+    <nav class="pagination">
+      <?php $q = function($p){
+        $params = $_GET; $params['page']=$p; return '?' . http_build_query($params);
+      }; ?>
+      <a class="page-link <?= $page<=1?'disabled':'' ?>" href="<?= $page>1?$q($page-1):'#' ?>">Prev</a>
+      <span class="page-info">Page <?= $page ?> of <?= $totalPages ?></span>
+      <a class="page-link <?= $page>=$totalPages?'disabled':'' ?>" href="<?= $page<$totalPages?$q($page+1):'#' ?>">Next</a>
+    </nav>
+    <?php endif; ?>
 </div>
 
 
@@ -106,5 +130,23 @@ $notifications = $result->fetch_all(MYSQLI_ASSOC);
   .btn-primary:hover {
     background-color: #0056b3;
   }
+.pagination {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-top: 16px;
+}
+.pagination .page-link {
+  padding: 6px 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  text-decoration: none;
+  color: #333;
+}
+.pagination .page-link.disabled {
+  pointer-events: none;
+  opacity: 0.5;
+}
+.pagination .page-info { color: #555; }
 
 </style>

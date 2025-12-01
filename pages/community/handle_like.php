@@ -1,6 +1,6 @@
 <?php
-session_start();
-include '../../includes/db.php';
+require_once '../../includes/init.php';
+require_once '../../includes/db.php';
 
 header('Content-Type: application/json');
 
@@ -12,6 +12,12 @@ if (!isset($_SESSION['user_id'])) {
 $userId = $_SESSION['user_id'];
 $postId = $_POST['post_id'] ?? null;
 $action = $_POST['action'] ?? null;
+
+if (!csrf_verify()) {
+  http_response_code(400);
+  echo json_encode(['success' => false, 'message' => 'Invalid CSRF token']);
+  exit;
+}
 
 if (!$postId || !in_array($action, ['like', 'dislike'])) {
   echo json_encode(['success' => false, 'message' => 'Invalid input.']);

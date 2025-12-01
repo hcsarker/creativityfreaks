@@ -8,15 +8,6 @@ document.addEventListener('DOMContentLoaded', function() {
         e.stopPropagation();
         const dropdown = document.getElementById('notification-dropdown');
         dropdown.classList.toggle('show');
-        
-        // Mark all as read when opened
-        if (dropdown.classList.contains('show')) {
-            document.querySelectorAll('.notification-item.unread').forEach(item => {
-                markAsRead(item.dataset.id);
-                item.classList.remove('unread');
-            });
-            document.getElementById('notification-count').textContent = '0';
-        }
     });
     
     // Close dropdown when clicking outside
@@ -62,8 +53,17 @@ function updateNotifications(data) {
         // Add click handlers
         document.querySelectorAll('.notification-item').forEach(item => {
             item.addEventListener('click', function() {
-                if (!this.classList.contains('read')) {
-                    window.location.href = getNotificationLink(this.dataset);
+                const target = this;
+                const wasUnread = target.classList.contains('unread');
+                if (wasUnread) {
+                    markAsRead(target.dataset.id).finally(() => {
+                        target.classList.remove('unread');
+                        target.classList.add('read');
+                        decrementBadge();
+                        window.location.href = getNotificationLink(target.dataset);
+                    });
+                } else {
+                    window.location.href = getNotificationLink(target.dataset);
                 }
             });
         });
@@ -102,8 +102,9 @@ function markAsRead(id) {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
+            'X-CSRF-Token': getCsrfToken()
         },
-        body: `id=${id}`
+        body: `id=${encodeURIComponent(id)}&csrf_token=${encodeURIComponent(getCsrfToken())}`
     }).catch(console.error);
 }
 
@@ -111,4 +112,18 @@ function handleError(error) {
     console.error('Notification error:', error);
     const list = document.getElementById('notification-list');
     if (list) list.innerHTML = '<div class="notification-error">Failed to load notifications</div>';
+}
+
+function getCsrfToken() {
+    const meta = document.querySelector('meta[name="csrf-token"]');
+    return meta ? meta.getAttribute('content') : '';
+}
+
+function decrementBadge() {
+    const badge = document.getElementById('notification-count');
+    if (!badge) return;
+    const current = parseInt(badge.textContent || '0', 10);
+    if (Number.isFinite(current) && current > 0) {
+        badge.textContent = String(current - 1);
+    }
 }

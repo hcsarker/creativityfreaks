@@ -10,7 +10,7 @@ $response = [
     'count' => 0,
     'notifications' => []
 ];
-<?php echo 'Session user_id: ' . ($_SESSION['user_id'] ?? 'not set'); ?>
+
 
 try {
     if (!isset($_SESSION['user_id'])) {
@@ -38,12 +38,18 @@ try {
     $result = $notifQuery->get_result();
     
     while ($row = $result->fetch_assoc()) {
-        $icon = match($row['type']) {
-            'course' => '📚',
-            'community' => '💬',
-            'message' => '✉️',
-            default => '🔔'
-        };
+        $icon = '🔔';
+        switch ($row['type']) {
+            case 'course':
+                $icon = '📚';
+                break;
+            case 'community':
+                $icon = '💬';
+                break;
+            case 'message':
+                $icon = '✉️';
+                break;
+        }
         
         $response['notifications'][] = [
             'id' => $row['id'],

@@ -1,10 +1,17 @@
 <?php
-session_start();
-include '../../includes/db.php';
+require_once '../../includes/init.php';
+require_once '../../includes/db.php';
 
 if (!isset($_SESSION['user_id'])) {
   http_response_code(403);
   echo "You must be logged in to comment.";
+  exit;
+}
+
+$isValidCsrf = csrf_verify();
+if (!$isValidCsrf) {
+  http_response_code(400);
+  echo "Invalid CSRF token.";
   exit;
 }
 
@@ -15,11 +22,21 @@ $image = null;
 
 // Upload image if available
 if (isset($_FILES['image']) && $_FILES['image']['error'] === 0) {
-  $targetDir = '../../uploads/community/';
-  $imageName = time() . '_' . basename($_FILES['image']['name']);
-  $targetPath = $targetDir . $imageName;
-  move_uploaded_file($_FILES['image']['tmp_name'], $targetPath);
-  $image = $imageName;
+  $allowedTypes = ['image/jpeg', 'image/png', 'image/webp'];
+  $maxSize = 10 * 1024 * 1024; // 10MB
+  $finfo = new finfo(FILEINFO_MIME_TYPE);
+  $mime = $finfo->file($_FILES['image']['tmp_name']);
+  if (in_array($mime, $allowedTypes) && $_FILES['image']['size'] <= $maxSize) {
+    $ext = pathinfo($_FILES['image']['name'], PATHINFO_EXTENSION);
+    $imageName = time() . '_' . bin2hex(random_bytes(5)) . '.' . $ext;
+    $targetDir = realpath(__DIR__ . '/../../uploads/community');
+    if ($targetDir === false) { $targetDir = __DIR__ . '/../../uploads/community'; }
+    if (!is_dir($targetDir)) { @mkdir($targetDir, 0755, true); }
+    $targetPath = $targetDir . DIRECTORY_SEPARATOR . $imageName;
+    if (is_uploaded_file($_FILES['image']['tmp_name']) && move_uploaded_file($_FILES['image']['tmp_name'], $targetPath)) {
+      $image = $imageName;
+    }
+  }
 }
 
 // Insert comment

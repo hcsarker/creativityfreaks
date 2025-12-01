@@ -1,4 +1,3 @@
-
 # Creativity Freaks
 
 Creativity Freaks is a modern, fully responsive, and feature-rich e-learning platform designed to connect students, instructors, and administrators in an interactive online learning environment. The platform supports both free and paid courses, a vibrant community system, and role-based user management.
@@ -50,116 +49,196 @@ Creativity Freaks aims to provide a seamless and engaging platform for learners 
 
 ## Technologies Used
 
-- **Frontend:** HTML5, CSS3, JavaScript, AJAX
-- **Backend:** PHP (Modular and clean code structure)
-- **Database:** MySQL
-- **Development Environment:** XAMPP / Apache
-- **Version Control:** Git
-- **Payment Processing:** SSLCommerce (for paid courses)
-- **Mailing:** PHPMailer (for email notifications)
-- **Others:** AOI, Font Awesome, Bootstrap 5, jQuery
----
+# Creativity Freaks
 
-## Project Status
+A modern, responsive e‑learning platform connecting students, instructors, and admins with courses, community, and payments — built with PHP, MySQL, and vanilla JS.
 
-The project is partially complete:
+— Beautiful UX, pragmatic PHP, and a clean modular structure.
 
-- ✅ User authentication and session management
-- ✅ Responsive design and frontend implementation
-- ✅ Course browsing and filtering
-- ✅ Community posting, commenting, and like/dislike system
-- ✅ User dashboards with course progress
-- ⬜ Instructor panel (under development)
-- ⬜ Admin panel (under development)
-- ✅ Payment integration for paid courses
-- ⬜ Real-time notifications (enhancements planned)
-- ✅ Animated modals for login and registration
-- ⬜ course content upload and management (in progress)
+## Contents
 
+- Overview
+- Features
+- Tech Stack
+- Architecture
+- Getting Started
+- Environment & Config
+- Database Setup
+- Notifications
+- Security & Hardening
+- Project Structure
+- Roadmap
+- Contributing
+- License
 
----
+## Overview
 
-## Installation and Setup
+Creativity Freaks provides:
 
-1. **Clone the repository:**
+- Role‑based access (Student, Instructor, Admin)
+- Course browsing and enrollment
+- Community posts, comments, and likes
+- Instructor tools and dashboards
+- Payments via SSLCommerz
+- Email via PHPMailer
+- In‑app notifications
 
-   ```bash
-   git clone https://github.com/hcsarker/creativity-freaks.git
-   cd creativity-freaks
-   ```
+## Features
 
-2. **Create a MySQL database** (e.g., `creativity_freaks`).
+- Auth & Roles: Secure login/register, session-backed roles.
+- Courses: Browse, details view, enrollment flows.
+- Community: Posts, threaded comments, likes, AJAX interactions.
+- Dashboards: Personalized student/instructor panels.
+- Notifications: Bell menu with recent items and unread counts.
+- Payments: SSLCommerz success/fail/cancel flows.
+- Email: Transactional emails via PHPMailer.
+- Responsive UI: Mobile-first styling and animations.
 
-3. **Import the database schema:**
+## Tech Stack
 
-   Use the provided `database/schema.sql` file.
+- Frontend: HTML5, CSS3, JavaScript (fetch/AJAX)
+- Backend: PHP (procedural with includes)
+- Database: MySQL (mysqli prepared statements)
+- Infra: Apache (XAMPP/LAMPP)
+- Payments: SSLCommerz
+- Mail: PHPMailer
 
-4. **Configure database connection:**
+## Architecture
 
-   Edit `config/db.php` and update your database credentials.
+- `includes/` contains common building blocks (DB, layout/header/footer, auth guard, notifications API).
+- `pages/` holds route-like views (and nested areas: `admin/`, `instructor/`, `community/`).
+- `assets/` hosts CSS/JS, with JS modules calling backend endpoints.
+- `ajax/` and some `includes/` files serve as lightweight JSON endpoints.
 
-5. **Start your local server environment** (e.g., XAMPP).
+## Getting Started
 
-6. **Open the application** in your browser:
+1. Clone
 
-   ```
-   http://localhost/creativity-freaks/
-   ```
+```bash
+git clone https://github.com/hcsarker/creativityfreaks.git
+cd creativityfreaks
+```
 
----
+2. Place in web root
+
+- Linux (LAMPP): `/opt/lampp/htdocs/creativityfreaks`
+- Windows (XAMPP): `C:\xampp\htdocs\creativityfreaks`
+
+3. Env config
+
+```bash
+cp .env.example .env
+# edit .env to match your local DB
+```
+
+4. Create database
+
+```sql
+CREATE DATABASE creativity_freaks CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+```
+
+5. Import schema
+
+- If you have an SQL dump, import it via phpMyAdmin or CLI.
+
+6. Visit the app
+
+```
+http://localhost/creativityfreaks/
+```
+
+## Environment & Config
+
+- `.env` is loaded by `includes/env.php` (no external deps).
+- DB vars used by `includes/db.php` with safe defaults:
+  - `CF_DB_HOST`, `CF_DB_NAME`, `CF_DB_USER`, `CF_DB_PASS`
+- Example file: `.env.example`
+
+## Database Setup
+
+- Uses MySQL with `mysqli` prepared statements.
+- Ensure proper indexes on users, notifications, posts, comments.
+- Character set: `utf8mb4` (emoji safe).
+
+## Notifications
+
+- API: `includes/notifications.php` returns JSON list + unread count.
+- Mark read: `includes/mark_read.php` (POST) marks individual items read.
+- Frontend: `assets/js/notifications.js` renders a dropdown and updates counts.
+- Behavior: An item is marked read when clicked (not on open) for accuracy.
+
+## Security & Hardening
+
+Implemented in this repo:
+
+- Secure sessions: `includes/init.php` sets `HttpOnly`, `SameSite=Lax`, and `Secure` (when HTTPS).
+- CSRF protection: Token generation + verification helpers in `includes/init.php`.
+  - Tokens added to forms (login/register) and AJAX requests (mark read).
+- Safer DB errors: `includes/db.php` logs connection errors without exposing details.
+- Output escaping: `htmlspecialchars()` used on dynamic content in templates.
+
+Recommended next steps:
+
+- Add pagination on long lists (e.g., instructor notifications).
+- Cover all POST endpoints with CSRF checks.
+- Uploads hardening: validate mime/extension, randomized names, restrict execution.
+- Basic rate limiting for login to slow brute‑force attempts.
+- Centralized error logging/monitoring (e.g., file logs).
 
 ## Project Structure
 
 ```
-creativity-freaks/
-├── assets/             # CSS, JavaScript, images, fonts
-├── ajax/               # AJAX handlers for community interactions
-├── includes/           # Header, footer, layout PHP includes , db connection
-├── auth/               # Authentication modals and logic
-├── pages/              # Admin panel, instructor panel, community pages (in progress) and other static pages(home, about, contact, courses, etc.)
-├── uploads/            # User uploads (course materials, assignments)
-├── payment/            # Payment processing and integration
-├── index.php           # Landing page
-├── README.md           # Project documentation
-└── ...
+.
+├── ajax/
+├── assets/
+│   ├── css/
+│   └── js/
+├── auth/
+├── includes/
+│   ├── env.php
+│   ├── init.php
+│   ├── db.php
+│   ├── header.php
+│   ├── footer.php
+│   ├── layout.php
+│   ├── notifications.php
+│   └── mark_read.php
+├── pages/
+│   ├── community/
+│   └── instructor/
+├── payment/
+├── uploads/
+└── index.php
 ```
 
----
+## Roadmap
 
-## Future Enhancements
-
-- Complete instructor and admin dashboards with full CRUD operations.
-- Integrate payment gateway for premium courses.
-- Real-time notifications and chat system.
-- Advanced security features: input validation, file upload restrictions.
-- Multi-language support and accessibility improvements.
-- Performance optimization and caching.
-
----
+- Instructor/admin dashboards: complete CRUD and analytics.
+- Global CSRF coverage and validation layer.
+- Uploads scanning & serving via non-executable locations.
+- Real-time enhancements: optional websockets or SSE for notifications.
+- Localization (Bangla/English) and accessibility.
 
 ## Contributing
 
-Contributions are welcome! To contribute:
+PRs welcome! Please:
 
-1. Fork the repository.
-2. Create a new branch (`git checkout -b feature-name`).
-3. Commit your changes (`git commit -m "Add feature"`).
-4. Push to your fork (`git push origin feature-name`).
-5. Submit a pull request.
-
-Please ensure code quality and add relevant documentation.
-
----
+- Write clear commits and keep changes focused.
+- Escape output and use prepared statements.
+- Add docs for new endpoints or UI.
 
 ## License
 
-This project is licensed under the MIT License.
+MIT
 
----
-            
+           
 ## Contact
+We welcome feedback, feature requests, and contributions from the community. Join us in shaping the future of online learning with Creativity Freaks!
 
 **Hridoy Chandra Sarker**  
 Email: hcsarker2002@gmail.com  
 GitHub: [https://github.com/hcsarker](https://github.com/hcsarker)
 LinkedIn: [https://www.linkedin.com/in/hridoy-chandra-sarker](https://www.linkedin.com/in/hridoy-chandra-sarker)
+—
+
+Bangla (Quick Note): এই প্রোজেক্টটি একটি ফুল-স্ট্যাক ই-লার্নিং প্ল্যাটফর্ম। লোকাল সেটআপ করতে `.env` কনফিগার করুন, ডাটাবেস তৈরি করে ইমপোর্ট দিন, তারপর `http://localhost/creativityfreaks/` ভিজিট করুন। সিকিউরিটি হিসেবে সেশন/CSRF যুক্ত করা হয়েছে; বাকি POST এন্ডপয়েন্টগুলোতেও ধাপে ধাপে কভার করা হবে।

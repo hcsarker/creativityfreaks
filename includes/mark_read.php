@@ -1,5 +1,5 @@
 <?php
-session_start();
+require_once __DIR__ . '/init.php';
 require_once 'db.php';
 
 header('Content-Type: application/json');
@@ -7,7 +7,7 @@ header('Content-Type: application/json');
 $response = ['success' => false];
 
 try {
-    if (!isset($_SESSION['user_id']) || !isset($_POST['id'])) {
+    if (!isset($_SESSION['user_id']) || !isset($_POST['id']) || !csrf_verify()) {
         throw new Exception('Invalid request');
     }
 

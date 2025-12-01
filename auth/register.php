@@ -1,6 +1,13 @@
 <?php
-session_start();
+require_once '../includes/init.php';
 require_once '../includes/db.php';
+
+if (!csrf_verify()) {
+  $_SESSION['error'] = 'Invalid session. Please try again.';
+  $_SESSION['error_type'] = 'register';
+  header('Location: /creativityfreaks/index.php');
+  exit;
+}
 
 // Collect form data
 $name = trim($_POST['name']);
@@ -11,6 +18,7 @@ $confirm = $_POST['confirm_password'];
 // Validation
 if ($password !== $confirm) {
   $_SESSION['error'] = "Passwords do not match.";
+  $_SESSION['error_type'] = 'register';
   header("Location: /creativityfreaks/index.php");
   exit;
 }
@@ -22,6 +30,7 @@ $stmt->execute();
 $stmt->store_result();
 if ($stmt->num_rows > 0) {
   $_SESSION['error'] = "Email already registered.";
+  $_SESSION['error_type'] = 'register';
   header("Location: /creativityfreaks/index.php");
   exit;
 }
@@ -41,6 +50,7 @@ if ($stmt->execute()) {
   header("Location: /creativityfreaks/index.php");
 } else {
   $_SESSION['error'] = "Registration failed.";
+  $_SESSION['error_type'] = 'register';
   header("Location: /creativityfreaks/index.php");
 }
 exit;

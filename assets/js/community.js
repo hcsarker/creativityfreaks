@@ -17,7 +17,8 @@ function bindCommunityEvents() {
 
       fetch('/creativityfreaks/pages/community/like_comment.php', {
         method: 'POST',
-        body: new URLSearchParams({ comment_id: commentId })
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRF-Token': getCsrfToken() },
+        body: new URLSearchParams({ comment_id: commentId, csrf_token: getCsrfToken() })
       })
         .then(res => res.json())
         .then(data => {
@@ -38,7 +39,8 @@ function bindCommunityEvents() {
 
       fetch('/creativityfreaks/pages/community/reply_comment.php', {
         method: 'POST',
-        body: new URLSearchParams({ comment_id: commentId, reply: reply })
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRF-Token': getCsrfToken() },
+        body: new URLSearchParams({ comment_id: commentId, reply: reply, csrf_token: getCsrfToken() })
       })
         .then(res => res.text())
         .then(html => {
@@ -97,7 +99,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       fetch('/creativityfreaks/pages/community/submit_comment.php', {
         method: 'POST',
-        body: formData
+        body: (function(){ formData.append('csrf_token', getCsrfToken()); return formData; })()
       })
         .then(res => res.text())
         .then(html => {
@@ -116,8 +118,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       fetch('/creativityfreaks/pages/community/handle_like.php', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-        body: `post_id=${postId}&action=${action}`
+        headers: { 'Content-Type': 'application/x-www-form-urlencoded', 'X-CSRF-Token': getCsrfToken() },
+        body: `post_id=${encodeURIComponent(postId)}&action=${encodeURIComponent(action)}&csrf_token=${encodeURIComponent(getCsrfToken())}`
       })
         .then(res => res.json())
         .then(data => {
@@ -166,5 +168,10 @@ function loadComments(postId, container = null) {
         if (target) target.innerHTML = data;
       }
     });
+}
+
+function getCsrfToken() {
+  const meta = document.querySelector('meta[name="csrf-token"]');
+  return meta ? meta.getAttribute('content') : '';
 }
 
